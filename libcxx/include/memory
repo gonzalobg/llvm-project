@@ -953,6 +953,19 @@ struct __builtin_new_allocator {
   }
 };
 
+#if _LIBCPP_STD_VER >= 20
+template <size_t N, typename T>
+[[nodiscard]]
+_LIBCPP_CONSTEXPR
+_LIBCPP_ALWAYS_INLINE
+T* assume_aligned(T* __ptr) {
+  #if defined(__clang__) || (defined(__GNUC__) && !defined(__ICC))
+    return reinterpret_cast<T*>(__builtin_assume_aligned(__ptr));
+  #else
+    return __ptr;
+  #endif
+}
+#endif // _LIBCPP_STD_VER >= 20
 
 _LIBCPP_END_NAMESPACE_STD
 
